@@ -19,6 +19,12 @@
 			"command": "rm -R backend/dist/*",
 			"args": [],
 			"hide": true
+		},
+		{
+			"type": "shell",
+			"group": "build",
+			"label": "[Backend] Rebuild Container",
+			"command": "docker-compose up -d --build --force-recreate --no-deps omics-backend",
 		}
 	]
 }
