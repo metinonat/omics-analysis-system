@@ -1,19 +1,20 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express } from 'express';
 
 import logger from './utils/logger';
 import config from './config';
+logger.info('Config is loaded...');
 
-import { connectDb } from './utils/utils';
+import { connect } from 'mongoose';
 
 const app: Express = express();
 
 const start = async () => {
-	await connectDb();
-
+	await connect(config.MONGO_URL);
+	
 	app.listen(config.HTTP_PORT, () => {
 		logger.info(`Server is running on port ${config.HTTP_PORT}`);
 	});
 }
 
-
+logger.info('Starting server...');
 start();
