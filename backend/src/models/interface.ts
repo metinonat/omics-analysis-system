@@ -1,7 +1,12 @@
-interface IOmics {
+import { Schema } from "mongoose";
+
+export interface IOmics {
 	gene: string;
-	exp1: number;
-	exp2: number;
-	cont1: number;
-	cont2: number;
+	transcript: Array<string>;
+}
+
+export interface ISamples {
+	name: string;
+	gene: Schema.Types.ObjectId;
+	value: number;
 }

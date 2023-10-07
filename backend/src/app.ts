@@ -1,20 +1,28 @@
-import express, { Express } from 'express';
+import express, { Express } from "express";
 
-import logger from './utils/logger';
-import config from './config';
-logger.info('Config is loaded...');
+import logger from "./utils/logger";
+import config from "./config";
+logger.info("Config is loaded...");
 
-import { connect } from 'mongoose';
+import http from "http";
+import { router } from "./routes/router";
+import { connectDb } from "./utils/utils";
 
 const app: Express = express();
 
 const start = async () => {
-	await connect(config.MONGO_URL);
-	
-	app.listen(config.HTTP_PORT, () => {
+	await connectDb();
+
+	const httpServer = http.createServer(app);
+
+	app.use(express.json());
+	app.use(express.urlencoded({ extended: true }));
+	app.use(router);
+
+	httpServer.listen(config.HTTP_PORT, () => {
 		logger.info(`Server is running on port ${config.HTTP_PORT}`);
 	});
-}
+};
 
-logger.info('Starting server...');
+logger.info("Starting server...");
 start();
