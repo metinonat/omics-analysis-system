@@ -3,7 +3,6 @@ import { AppError, ErrorCode, HttpStatus } from "../models/common";
 import { getOmicsData, listOmicsData, upsertOmics } from "../services/omics";
 import logger from "../utils/logger";
 import { errorResponse } from "../utils/response";
-import { transaction } from "../utils/utils";
 
 export const listOmicsHandler = async (req: Request, res: Response) => {
 	try {
@@ -17,7 +16,7 @@ export const listOmicsHandler = async (req: Request, res: Response) => {
 
 export const getOmicsHandler = async (req: Request, res: Response) => {
 	try {
-		const gene = await getOmicsData(req.validatedParams.geneId);
+		const gene = await getOmicsData(req.validatedQuery);
 		res.status(HttpStatus.Success).json(gene);
 	} catch (error) {
 		logger.error(error);
@@ -31,11 +30,7 @@ export const getOmicsHandler = async (req: Request, res: Response) => {
 
 export const upsertOmicsHandler = async (req: Request, res: Response) => {
 	try {
-		let gene;
-		await transaction(async (trx) => {
-			gene = await upsertOmics(req.validatedBody.gene, req.validatedBody.transcript, trx);
-		});
-		logger.info(gene);
+		let gene = await upsertOmics(req.validatedBody.geneId, req.validatedBody.gene, req.validatedBody.transcript);
 		res.status(HttpStatus.Success).json(gene);
 	} catch (error) {
 		logger.error(error);

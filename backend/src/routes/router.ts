@@ -5,7 +5,7 @@ import { validateRequest } from "../middlewares/validation";
 
 export const router = Router();
 
-router.get("/omics", [
+router.get("/omics/list", [
 	validateRequest({
 		querySchema: Joi.object({
 			page: Joi.number().min(1).default(1),
@@ -16,11 +16,12 @@ router.get("/omics", [
 	listOmicsHandler,
 ]);
 
-router.get("/omics/:geneId", [
+router.get("/omics", [
 	validateRequest({
-		paramsSchema: Joi.object({
-			geneId: Joi.string().required(),
-		}),
+		querySchema: Joi.object({
+			geneId: Joi.string().optional(),
+			gene: Joi.string().optional(),
+		}).or("geneId", "gene"),
 	}),
 	getOmicsHandler,
 ]);
@@ -28,6 +29,7 @@ router.get("/omics/:geneId", [
 router.post("/omics", [
 	validateRequest({
 		bodySchema: Joi.object({
+			geneId: Joi.string().optional(),
 			gene: Joi.string().required(),
 			transcript: Joi.array().items(Joi.string().required()).required(),
 		}),

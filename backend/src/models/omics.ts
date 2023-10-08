@@ -1,5 +1,5 @@
-import { ISamples } from "./db/interface";
+import { IOmics, ISamples } from "./db/interface";
 
-export type OmicsData = {
+export type OmicsData = IOmics & {
 	samples: ISamples[];
 };

@@ -24,7 +24,6 @@ export const transaction = async (asyncFunc: (trx: any) => Promise<any>) => {
 	const session = await startSession();
 	session.startTransaction();
 	try {
-		logger.info("transaction");
 		const result = await asyncFunc(session);
 		await session.commitTransaction();
 		session.endSession();
