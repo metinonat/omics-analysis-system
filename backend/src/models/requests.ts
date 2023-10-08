@@ -10,3 +10,11 @@ export type PaginatedResponse<T> = {
 export type GetSampleResponse = Omit<ISamples, "geneId" | "__v"> & {
 	gene: string;
 };
+
+export type GeneAnalysisResponse = {
+	sampleSize: number;
+	mean: number;
+	median: number;
+	variance: number;
+	standartDeviation: number;
+};
