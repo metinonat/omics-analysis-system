@@ -22,7 +22,7 @@ export const listOmicsData = async (page: number, perPage: number, order: "asc" 
 			.select("-__v");
 
 		for (let gene of omics) {
-			let samples = await Samples.find({ gene: gene.id }).select("-__v");
+			let samples = await Samples.find({ geneId: gene.id }).select("-__v").exec();
 			result.data.push({
 				...gene.toObject<IOmics>(),
 				samples: samples,
@@ -44,7 +44,7 @@ export const getOmicsData = async (params: { geneId?: Schema.Types.ObjectId; gen
 	if (!gene) throw new AppError(ErrorCode.NotFound, "Gene not found");
 	result = gene.toObject();
 
-	const samples = await Samples.find({ gene: gene._id });
+	const samples = await Samples.find({ geneId: gene.id }).select("-__v").exec();
 	result.samples = samples;
 
 	return result;

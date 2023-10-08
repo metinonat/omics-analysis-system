@@ -7,6 +7,6 @@ export interface IOmics {
 
 export interface ISamples {
 	name: string;
-	gene: Schema.Types.ObjectId;
+	geneId: Schema.Types.ObjectId;
 	value: number;
 }

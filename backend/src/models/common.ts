@@ -1,5 +1,6 @@
 export enum ErrorCode {
 	NotFound = 1,
+	AlreadyExists = 2,
 }
 
 export enum HttpStatus {
