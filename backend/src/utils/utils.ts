@@ -1,4 +1,4 @@
-import { connect } from "mongoose";
+import { connect, startSession } from "mongoose";
 import config from "../config";
 import logger from "./logger";
 
@@ -18,4 +18,21 @@ export const connectDb = async (attempt: number = 0) => {
 			if (attempt >= 15) throw error;
 			setTimeout(connectDb, 5000, attempt + 1);
 		});
+};
+
+export const transaction = async (asyncFunc: (trx: any) => Promise<any>) => {
+	const session = await startSession();
+	session.startTransaction();
+	try {
+		logger.info("transaction");
+		const result = await asyncFunc(session);
+		await session.commitTransaction();
+		session.endSession();
+		return result;
+	} catch (error) {
+		logger.error(error);
+		await session.abortTransaction();
+		session.endSession();
+		throw error;
+	}
 };

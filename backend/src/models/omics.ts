@@ -1,7 +1,5 @@
-import { Schema } from "mongoose";
-import { IOmics, ISamples } from "./interface";
+import { ISamples } from "./db/interface";
 
-export type OmicsData = IOmics & {
-	id: Schema.Types.ObjectId;
+export type OmicsData = {
 	samples: ISamples[];
 };
