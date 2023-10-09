@@ -64,7 +64,24 @@ export const upsertSample = async (sampleId: string, name: string, geneId: Schem
 			let result = await Samples.create({ name: name, geneId: geneId, value: value });
 			return result.id;
 		} else {
-			throw new AppError(ErrorCode.AlreadyExists, "Sample and gene pair is already exists!");
+			if (value === existing.value) {
+				throw new AppError(ErrorCode.AlreadyExists, "Sample and gene pair is already exists with same value!");
+			} else {
+				let result = await Samples.updateOne({ _id: existing.id }, { name: name, geneId: geneId, value: value });
+				return result.upsertedId;
+			}
 		}
+	}
+};
+
+export const upsertSampleFromUpload = async (name: string, geneId: Schema.Types.ObjectId, value: number) => {
+	let filter: any = { name: name, geneId: geneId };
+
+	const existing = await Samples.findOne(filter).exec();
+
+	if (!existing) {
+		await Samples.create({ name: name, geneId: geneId, value: value });
+	} else {
+		await Samples.updateOne({ _id: existing.id }, { name: name, geneId: geneId, value: value });
 	}
 };

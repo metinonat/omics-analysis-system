@@ -46,7 +46,10 @@ services:
       - MONGO_PASSWORD=o230D3kfas9
       - MONGO_DB=omics-db
       - HTTP_PORT=8080
+      - UPLOADS_DIR=/usr/app/uploads/
+      - LOG_LEVEL=debug
     ports:
       - 8080:8080
-    command: ["node", "app.js"]
+      - 9229:9229
+    command: ["node", "--inspect=0.0.0.0:9229", "app.js"]
     tty: true

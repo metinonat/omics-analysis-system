@@ -10,4 +10,4 @@ export const samplesSchema = new Schema<ISamples>({
 	name: { type: String, required: true },
 	geneId: { type: Schema.Types.ObjectId, ref: "Omics", required: true },
 	value: { type: Number, required: true },
-}).index({ name: 1, gene: 1 }, { unique: true });
+}).index({ name: 1, geneId: 1 }, { unique: true });

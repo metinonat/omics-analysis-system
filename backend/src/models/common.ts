@@ -1,6 +1,8 @@
 export enum ErrorCode {
 	NotFound = 1,
 	AlreadyExists = 2,
+	UploadFailed = 3,
+	BadRequest = 4,
 }
 
 export enum HttpStatus {

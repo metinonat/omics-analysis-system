@@ -5,4 +5,6 @@ WORKDIR /usr/app
 COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install
 
+RUN mkdir -p /usr/app/uploads
+
 COPY dist/ ./ 

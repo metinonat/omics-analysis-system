@@ -63,3 +63,13 @@ export const upsertOmics = async (geneId: mongoose.Types.ObjectId, gene: string,
 		return result.id;
 	}
 };
+
+export const findOrInsertOmics = async (gene: string, transcript: string[]) => {
+	const existing = await Omics.findOne({ gene: gene }).select("-__v").exec();
+	if (existing) {
+		return existing.id;
+	} else {
+		let result = await Omics.create({ gene: gene, transcript: transcript });
+		return result.id;
+	}
+};

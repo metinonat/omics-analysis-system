@@ -7,6 +7,8 @@ type AppConfig = {
 	MONGO_PASSWORD: string;
 	MONGO_DB: string;
 	HTTP_PORT: number;
+	UPLOADS_DIR: string;
+	LOG_LEVEL: string;
 };
 
 const validateAppConfig = (env: any) => {
@@ -26,6 +28,8 @@ const appConfigJoi = Joi.object<AppConfig>({
 	MONGO_PASSWORD: Joi.string().required(),
 	MONGO_DB: Joi.string().required(),
 	HTTP_PORT: Joi.number().optional().default(8080),
+	UPLOADS_DIR: Joi.string().required(),
+	LOG_LEVEL: Joi.string().optional().default("info"),
 });
 
 const config = validateAppConfig(process.env);

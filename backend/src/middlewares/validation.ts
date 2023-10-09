@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
+import { HttpStatus } from "../models/common";
 import { errorResponse } from "../utils/response";
 
 export const validateRequest = (schemas: { bodySchema?: Joi.ObjectSchema<any>; querySchema?: Joi.ObjectSchema<any>; paramsSchema?: Joi.ObjectSchema<any> }) => {
@@ -32,4 +33,10 @@ export const validateRequest = (schemas: { bodySchema?: Joi.ObjectSchema<any>; q
 		}
 		next();
 	};
+};
+
+export const validateTsvFile = (req: Request, res: Response, next: NextFunction) => {
+	if (!req.file) errorResponse("No file uploaded!", HttpStatus.BadRequest, req, res);
+	else if (req.file.mimetype !== "text/tab-separated-values") errorResponse("Samples file must be a TSV file!", HttpStatus.BadRequest, req, res);
+	else next();
 };
