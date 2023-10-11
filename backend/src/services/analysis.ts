@@ -1,3 +1,4 @@
+import { PipelineStage } from "mongoose";
 import { AppError, ErrorCode } from "../models/common";
 import { Omics, Samples } from "../models/db/db-models";
 import { GeneAnalysisResponse } from "../models/requests";
@@ -39,4 +40,83 @@ export const getGeneAnalysis = async (geneId: string): Promise<GeneAnalysisRespo
 		geneAnalysis.standartDeviation = Math.sqrt(geneAnalysis.variance);
 	}
 	return geneAnalysis;
+};
+
+export const getZScoreOutliers = async (threshold: number, genes: string[]): Promise<string[]> => {
+	const getAll = genes.length === 0;
+	const pipeline: PipelineStage[] = [
+		{
+			$group: {
+				_id: "$geneId",
+				samples: {
+					$push: {
+						name: "$name",
+						value: "$value",
+					},
+				},
+			},
+		},
+		{
+			$addFields: {
+				mean: { $avg: "$samples.value" },
+				stdDev: { $stdDevSamp: "$samples.value" },
+			},
+		},
+		{
+			$unwind: "$samples",
+		},
+		{
+			$addFields: {
+				zScore: {
+					$cond: {
+						if: { $ne: ["$stdDev", 0] },
+						then: {
+							$abs: {
+								$divide: [{ $subtract: ["$samples.value", "$mean"] }, "$stdDev"],
+							},
+						},
+						else: 0,
+					},
+				},
+			},
+		},
+		{
+			$match: {
+				zScore: { $gt: threshold },
+			},
+		},
+		{
+			$lookup: {
+				from: "omics",
+				localField: "_id",
+				foreignField: "_id",
+				as: "omicsInfo",
+			},
+		},
+		{
+			$addFields: {
+				geneInfo: { $arrayElemAt: ["$omicsInfo", 0] },
+			},
+		},
+	];
+	if (!getAll) {
+		pipeline.push({
+			$match: {
+				"geneInfo.gene": { $in: genes },
+			},
+		});
+	}
+	pipeline.push({
+		$group: {
+			_id: "$_id",
+			gene: { $first: "$geneInfo.gene" },
+			mean: { $first: "$mean" },
+			stdDev: { $first: "$stdDev" },
+			samples: {
+				$push: "$samples",
+			},
+		},
+	});
+	const outliers = await Samples.aggregate(pipeline);
+	return outliers;
 };
