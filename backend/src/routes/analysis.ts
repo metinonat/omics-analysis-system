@@ -24,6 +24,4 @@ router.post("/outliers/z-score", [
 	getZScoreOutliersHandler,
 ]);
 
-// router.get("/outliers/ml", [getMLOutliersHandler]);
-
 export default router;
