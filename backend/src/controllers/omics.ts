@@ -6,7 +6,7 @@ import { errorResponse } from "../utils/response";
 
 export const listOmicsHandler = async (req: Request, res: Response) => {
 	try {
-		const omics = await listOmicsData(req.validatedQuery.page, req.validatedQuery.perPage, req.validatedQuery.order);
+		const omics = await listOmicsData(req.validatedQuery.page, req.validatedQuery.perPage, req.validatedQuery.order, req.validatedQuery.filter);
 		res.status(HttpStatus.Success).json(omics);
 	} catch (error) {
 		logger.error(error);
@@ -17,7 +17,7 @@ export const listOmicsHandler = async (req: Request, res: Response) => {
 
 export const listOmicsForInputHandler = async (req: Request, res: Response) => {
 	try {
-		const omics = await listOmicsForInputData();
+		const omics = await listOmicsForInputData(req.validatedQuery.filter);
 		res.status(HttpStatus.Success).json(omics);
 	} catch (error) {
 		logger.error(error);

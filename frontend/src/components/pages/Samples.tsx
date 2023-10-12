@@ -16,7 +16,7 @@ import TableRow from "@mui/material/TableRow";
 import * as React from "react";
 import { useEffect } from "react";
 import { TablePaginationActions } from "..";
-import CreateButton from "../common/Button";
+import CreateButton from "../Samples/AddSampleButton";
 import SearchBar from "../common/SearchBar";
 
 export default function SamplesTable() {

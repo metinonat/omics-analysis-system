@@ -16,7 +16,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import React, { useEffect } from "react";
-import { TablePaginationActions } from "..";
+import { AddOmicsButton, SearchBar, TablePaginationActions } from "..";
 
 function Row(props: { row: Gene & { samples: Sample[] } }) {
   const { row } = props;
@@ -77,6 +77,20 @@ function Row(props: { row: Gene & { samples: Sample[] } }) {
                       <TableCell align="right">{samplesRow.value}</TableCell>
                     </TableRow>
                   ))}
+                  {row.samples.length == 0 && (
+                    <TableRow>
+                      <TableCell colSpan={6}>
+                        <Typography
+                          variant="h6"
+                          gutterBottom
+                          component="div"
+                          sx={{ textAlign: "center" }}
+                        >
+                          No Sample Found for this Gene
+                        </Typography>
+                      </TableCell>
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </Box>
@@ -92,18 +106,20 @@ export default function GenesTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [data, setData] = React.useState([]);
 
-  useEffect(() => {
-    // Fetch data from an API or other source on the client side
-    fetch("http://localhost:8080/omics/list")
+  const fetchOmics = (filter?: string) => {
+    const url = filter
+      ? `http://localhost:8080/omics/list?filter=${filter}`
+      : "http://localhost:8080/omics/list";
+    fetch(url)
       .then((response) => response.json())
       .then((result) => {
         setData(result.data);
       })
       .catch((error) => console.error(error));
+  };
+  useEffect(() => {
+    fetchOmics();
   }, []);
-
-  let emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -133,11 +149,19 @@ export default function GenesTable() {
           <Table aria-label="custom pagination collapsible table">
             <TableHead>
               <TableRow>
+                <TableCell colSpan={2} align="left">
+                  <SearchBar search={fetchOmics} />
+                </TableCell>
+                <TableCell colSpan={4} align="right">
+                  <AddOmicsButton label="New Omics" fetchOmics={fetchOmics} />
+                </TableCell>
+              </TableRow>
+              <TableRow>
                 <TableCell />
-                <TableCell>
+                <TableCell colSpan={2}>
                   <b>Genes</b>
                 </TableCell>
-                <TableCell align="right">
+                <TableCell align="right" colSpan={2}>
                   <b>Transcript</b>
                 </TableCell>
                 <TableCell />
@@ -147,9 +171,18 @@ export default function GenesTable() {
               {data.map((row: Gene & { samples: Sample[] }) => (
                 <Row key={row._id} row={row} />
               ))}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
+              {data.length === 0 && (
+                <TableRow style={{ height: 53 }}>
+                  <TableCell colSpan={6}>
+                    <Typography
+                      variant="h6"
+                      gutterBottom
+                      component="div"
+                      sx={{ textAlign: "center" }}
+                    >
+                      No Gene Found
+                    </Typography>
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>

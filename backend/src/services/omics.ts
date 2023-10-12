@@ -5,17 +5,19 @@ import { IOmics } from "../models/db/interface";
 import { OmicsData } from "../models/omics";
 import { PaginatedResponse } from "../models/requests";
 
-export const listOmicsData = async (page: number, perPage: number, order: "asc" | "desc"): Promise<PaginatedResponse<OmicsData>> => {
+export const listOmicsData = async (page: number, perPage: number, order: "asc" | "desc", filter?: string): Promise<PaginatedResponse<OmicsData>> => {
 	let result: PaginatedResponse<OmicsData> = {
 		total: 0,
 		page,
 		perPage,
 		data: [],
 	};
+	let filterObj = {};
+	if (filter) filterObj = { gene: { $regex: ".*" + filter + ".*" } };
 
 	result.total = await Omics.countDocuments();
 	if (result.total > 0) {
-		const omics = await Omics.find()
+		const omics = await Omics.find(filterObj)
 			.sort({ gene: order })
 			.skip((page - 1) * perPage)
 			.limit(perPage)
@@ -32,8 +34,10 @@ export const listOmicsData = async (page: number, perPage: number, order: "asc" 
 	return result;
 };
 
-export const listOmicsForInputData = async () => {
-	const omics = await Omics.find().sort({ gene: "desc" }).select("-__v");
+export const listOmicsForInputData = async (filter?: string) => {
+	let filterObj = {};
+	if (filter) filterObj = { name: { $regex: ".*" + filter + ".*" } };
+	const omics = await Omics.find(filterObj).sort({ gene: "desc" }).select("-__v");
 	return omics.map((gene) => gene.toObject());
 };
 

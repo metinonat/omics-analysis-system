@@ -71,16 +71,19 @@ interface CreateButtonProps {
   fetchSamples: () => void;
 }
 
-export default function CreateButton(props: CreateButtonProps) {
+export default function AddSampleButton(props: CreateButtonProps) {
   const [open, setOpen] = React.useState(false);
   const [genes, setGenes] = React.useState([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const { register, handleSubmit, watch } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data); 
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
 
-  React.useEffect(() => {
-    fetch("http://localhost:8080/omics/list/input")
+  const fecthGenesForSelect = (filter?: string) => {
+    const url = filter
+      ? `http://localhost:8080/omics/list/input?filter=${filter}`
+      : "http://localhost:8080/omics/list/input";
+    fetch(url)
       .then((response) => response.json())
       .then((result) => {
         setGenes(result);
@@ -92,6 +95,10 @@ export default function CreateButton(props: CreateButtonProps) {
           error = false;
         }, 5000);
       });
+  };
+
+  React.useEffect(() => {
+    fecthGenesForSelect();
   }, []);
   return (
     <div>
@@ -136,7 +143,7 @@ export default function CreateButton(props: CreateButtonProps) {
                       label="Name"
                       placeholder="Sample Name"
                       variant="standard"
-                      {...register("name")}
+                      {...register("name", { required: true })}
                     />
                   </TableCell>
                   <TableCell>
@@ -149,18 +156,22 @@ export default function CreateButton(props: CreateButtonProps) {
                         inputMode: "numeric",
                         pattern: "[0-9]*.[0-9]*",
                       }}
-                      {...register("value")}
+                      {...register("value", { required: true })}
                     />
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell colSpan={2}>
                     <TextField
-                      id="outlined-select-currency"
                       select
                       fullWidth
                       label="Gene"
-                      {...register("gene")}
+                      {...register("gene", {
+                        required: true,
+                        onChange: (event) => {
+                          fecthGenesForSelect(event.target.gene);
+                        },
+                      })}
                     >
                       {genes.map((gene: Gene) => (
                         <MenuItem key={gene._id} value={gene._id}>

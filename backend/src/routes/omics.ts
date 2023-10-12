@@ -11,13 +11,18 @@ router.get("/list", [
 			page: Joi.number().min(1).default(1),
 			perPage: Joi.number().min(5).max(25).default(10),
 			order: Joi.string().valid("asc", "desc").default("asc"),
+			filter: Joi.string().optional(),
 		}),
 	}),
 	listOmicsHandler,
 ]);
 
-
 router.get("/list/input", [
+	validateRequest({
+		querySchema: Joi.object({
+			filter: Joi.string().optional(),
+		}),
+	}),
 	listOmicsForInputHandler,
 ]);
 
@@ -36,7 +41,7 @@ router.post("/", [
 		bodySchema: Joi.object({
 			geneId: Joi.string().optional(),
 			gene: Joi.string().required(),
-			transcript: Joi.array().items(Joi.string().required()).required(),
+			transcript: Joi.string().required(),
 		}),
 	}),
 	upsertOmicsHandler,
