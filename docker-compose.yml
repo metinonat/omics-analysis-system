@@ -53,3 +53,13 @@ services:
       - 9229:9229
     command: ["node", "--inspect=0.0.0.0:9229", "app.js"]
     tty: true
+  omics-frontend:
+    image: omics-frontend
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    environment:
+      - DRAWER_WIDTH=240
+    ports:
+      - 8000:3000
+    command: ["npm", "start"]

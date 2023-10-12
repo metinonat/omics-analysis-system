@@ -1,30 +1,42 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "typescript",
-			"tsconfig": "backend/tsconfig.json",
-			"problemMatcher": [
-				"$tsc"
-			],
-			"group": "build",
-			"label": "tsc: build - backend/tsconfig.json",
-			"dependsOn": [
-				"clean-dist"
-			]
-		},
-		{
-			"label": "clean-dist",
-			"type": "shell",
-			"command": "rm -R backend/dist/*",
-			"args": [],
-			"hide": true
-		},
-		{
-			"type": "shell",
-			"group": "build",
-			"label": "[Backend] Rebuild Container",
-			"command": "docker-compose up -d --build --force-recreate --no-deps omics-backend",
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "typescript",
+      "tsconfig": "backend/tsconfig.json",
+      "problemMatcher": ["$tsc"],
+      "group": "build",
+      "label": "tsc: build - backend/tsconfig.json",
+      "dependsOn": ["clean-dist"]
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "label": "npm: build - frontend",
+      "dependsOrder": "sequence",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      }
+    },
+    {
+      "label": "clean-dist",
+      "type": "shell",
+      "command": "rm -R -f backend/dist/*",
+      "args": [],
+      "hide": true
+    },
+    {
+      "type": "shell",
+      "group": "build",
+      "label": "[Backend] Rebuild Container",
+      "command": "docker-compose up -d --build --force-recreate --no-deps omics-backend"
+    },
+    {
+      "type": "shell",
+      "group": "build",
+      "label": "[Frontend] Rebuild Container",
+      "command": "docker-compose up -d --build --force-recreate --no-deps omics-frontend"
+    }
+  ]
 }
