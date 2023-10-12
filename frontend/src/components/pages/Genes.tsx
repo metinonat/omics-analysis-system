@@ -1,11 +1,13 @@
-"use client";
+"user client";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
+
+import InfoIcon from "@mui/icons-material/Info";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { Grid, TableFooter, TablePagination } from "@mui/material";
+import { Grid, Link, TableFooter, TablePagination } from "@mui/material";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -18,49 +20,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import * as React from "react";
+import React, { useEffect } from "react";
 
-function createData(id: string, gene: string, transcript: string) {
-  return {
-    id,
-    gene,
-    transcript,
-    samples: [
-      {
-        date: "2020-01-05",
-        customerId: "11091700",
-        amount: 3,
-      },
-      {
-        date: "2020-01-02",
-        customerId: "Anonymous",
-        amount: 1,
-      },
-    ],
-  };
-}
-
-const rows = [
-  createData("1", "gene1", "trscx1"),
-  createData("2", "gene2", "trscx2"),
-  createData("3", "gene3", "trscx11, trscx12"),
-  createData("4", "gene4", "trscx21, trscx2"),
-  createData("5", "gene5", "trscx13"),
-  createData("6", "gene6", "trscx2"),
-  createData("7", "gene7", "trscx11, trscx12"),
-  createData("8", "gene8", "trscx21, trscx2"),
-  createData("9", "gene9", "trscx13"),
-  createData("10", "gene10", "trscx2"),
-  createData("11", "gene11", "trscx11, trscx12"),
-  createData("12", "gene12", "trscx21, trscx2"),
-  createData("13", "gene13", "trscx13"),
-  createData("14", "gene14", "trscx2"),
-  createData("15", "gene15", "trscx11, trscx12"),
-  createData("16", "gene16", "trscx21, trscx2"),
-  createData("17", "gene17", "trscx13"),
-];
-
-function Row(props: { row: ReturnType<typeof createData> }) {
+function Row(props: { row: Gene & { samples: Sample[] } }) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
 
@@ -80,6 +42,16 @@ function Row(props: { row: ReturnType<typeof createData> }) {
           {row.gene}
         </TableCell>
         <TableCell align="right">{row.transcript}</TableCell>
+        <TableCell align="right">
+          <IconButton
+            size="small"
+            component={Link}
+            LinkComponent={"a"}
+            href={`omics/${row._id}`}
+          >
+            {<InfoIcon />}
+          </IconButton>
+        </TableCell>
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -92,24 +64,18 @@ function Row(props: { row: ReturnType<typeof createData> }) {
                 <TableHead>
                   <TableRow>
                     <TableCell>Date</TableCell>
-                    <TableCell>Customer</TableCell>
-                    <TableCell align="right">Amount</TableCell>
-                    <TableCell align="right">Total price ($)</TableCell>
+                    <TableCell>Sample</TableCell>
+                    <TableCell align="right">Expression</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {row.samples.map((samplesRow) => (
-                    <TableRow key={samplesRow.date}>
+                    <TableRow key={samplesRow._id}>
                       <TableCell component="th" scope="row">
-                        {samplesRow.date}
+                        {samplesRow.created}
                       </TableCell>
-                      <TableCell>{samplesRow.customerId}</TableCell>
-                      <TableCell align="right">{samplesRow.amount}</TableCell>
-                      <TableCell align="right">
-                        {Math.round(
-                          samplesRow.amount * parseInt(row.id) * 100
-                        ) / 100}
-                      </TableCell>
+                      <TableCell>{samplesRow.name}</TableCell>
+                      <TableCell align="right">{samplesRow.value}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -201,14 +167,23 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
     </Box>
   );
 }
-
 export default function GenesTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [data, setData] = React.useState([]);
 
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  useEffect(() => {
+    // Fetch data from an API or other source on the client side
+    fetch("http://localhost:8080/omics/list")
+      .then((response) => response.json())
+      .then((result) => {
+        setData(result.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  let emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -245,18 +220,16 @@ export default function GenesTable() {
                 <TableCell align="right">
                   <b>Transcript</b>
                 </TableCell>
+                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>
-              {(rowsPerPage > 0
-                ? rows.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : rows
-              ).map((row) => (
-                <Row key={row.gene} row={row} />
-              ))}
+              {emptyRows < rowsPerPage
+                ? data &&
+                  data.map((row: Gene & { samples: Sample[] }) => (
+                    <Row key={row._id} row={row} />
+                  ))
+                : null}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={6} />
@@ -268,7 +241,7 @@ export default function GenesTable() {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
                   colSpan={3}
-                  count={rows.length}
+                  count={data.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{
