@@ -9,6 +9,7 @@ import { styled } from "@mui/material/styles";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Title from "../common/Title";
+let lastRequestTime: number = Date.now() - 1000 * 60;
 
 const Demo = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -21,7 +22,7 @@ export default function InteractiveList() {
   const emptyItems = ["empty1", "empty2", "empty3"];
 
   useEffect(() => {
-    rateLimitedApiRequest(() => {
+    rateLimitedApiRequest(lastRequestTime, () => {
       //@todo cannot get .env @see https://stackoverflow.com/questions/76280634/nextjs-app-not-read-environment-variables-from-docker-compose-yml
       axios
         .get(`http://localhost:8080/omics/list`)

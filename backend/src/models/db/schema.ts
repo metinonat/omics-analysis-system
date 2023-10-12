@@ -7,6 +7,7 @@ export const omicsSchema = new Schema<IOmics>({
 });
 
 export const samplesSchema = new Schema<ISamples>({
+	created: { type: Date, default: Date.now },
 	name: { type: String, required: true },
 	geneId: { type: Schema.Types.ObjectId, ref: "Omics", required: true },
 	value: { type: Number, required: true },

@@ -6,7 +6,7 @@ import { errorResponse } from "../utils/response";
 
 export const listSamplesHandler = async (req: Request, res: Response) => {
 	try {
-		const samples = await listSamplesData(req.validatedQuery.page, req.validatedQuery.perPage, req.validatedQuery.order, req.validatedQuery.filterName);
+		const samples = await listSamplesData(req.validatedQuery.page, req.validatedQuery.perPage, req.validatedQuery.order, req.validatedQuery.orderField, req.validatedQuery.filterName);
 		res.status(HttpStatus.Success).json(samples);
 	} catch (error) {
 		logger.error(error);

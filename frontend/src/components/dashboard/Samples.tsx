@@ -1,31 +1,33 @@
+import { rateLimitedApiRequest } from "@/api/request";
 import Link from "@mui/material/Link";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import * as React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import Title from "../common/Title";
 
-// Generate Order Data
-function createData(
-  id: number,
-  date: string,
-  name: string,
-  gene: string,
-  value: number
-) {
-  return { id, date, name, gene, value };
-}
-
-const rows = [
-  createData(0, "16 Mar, 2019", "chow.dbl.rep1", "Gene1", 12.44),
-  createData(1, "16 Mar, 2019", "chow.dbl.rep2", "Gene1", 1.4),
-  createData(2, "16 Mar, 2019", "chow.J1c.rep1", "Gene1", 0.4),
-  createData(3, "15 Mar, 2019", "chow.J1c.rep2", "Gene1", 6.2),
-];
+let lastRequestTime: number = Date.now() - 1000 * 60;
 
 export default function Samples() {
+  const [data, setData] = useState([]);
+  let emptyItemCount = 0;
+
+  useEffect(() => {
+    rateLimitedApiRequest(lastRequestTime, () => {
+      //@todo cannot get .env @see https://stackoverflow.com/questions/76280634/nextjs-app-not-read-environment-variables-from-docker-compose-yml
+      axios
+        .get(`http://localhost:8080/samples/list`)
+        .then((res) => {
+          emptyItemCount =
+            3 - res.data.data.length > 0 ? 3 - res.data.data.length : 0;
+          setData(res.data.data);
+        })
+        .catch((error) => console.error(error));
+    });
+  }, []);
   return (
     <React.Fragment>
       <Title>Recent Samples</Title>
@@ -39,19 +41,21 @@ export default function Samples() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.gene}</TableCell>
-              <TableCell align="right">{`${row.value}`}</TableCell>
+          {data.map((sample: Sample) => (
+            <TableRow key={sample._id}>
+              <TableCell>
+                {new Date(sample.created).toLocaleString()}
+              </TableCell>
+              <TableCell>{sample.name}</TableCell>
+              <TableCell>{sample.gene}</TableCell>
+              <TableCell align="right">{`${sample.value}`}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
       <Link
         color="primary"
-        href={"/genes"}
+        href={"/samples"}
         component="a"
         align="right"
         sx={{ mt: 3 }}

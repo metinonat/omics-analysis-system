@@ -11,6 +11,7 @@ router.get("/list", [
 			page: Joi.number().min(1).default(1),
 			perPage: Joi.number().min(5).max(25).default(10),
 			order: Joi.string().valid("asc", "desc").default("asc"),
+			orderField: Joi.string().valid("name", "gene", "created").default("created"),
 			filterName: Joi.string().optional(),
 		}),
 	}),

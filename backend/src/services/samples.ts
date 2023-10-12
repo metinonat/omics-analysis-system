@@ -4,7 +4,13 @@ import { Omics, Samples } from "../models/db/db-models";
 import { ISamples } from "../models/db/interface";
 import { GetSampleResponse, PaginatedResponse } from "../models/requests";
 
-export const listSamplesData = async (page: number, perPage: number, order: "asc" | "desc", filterName: string): Promise<PaginatedResponse<GetSampleResponse>> => {
+export const listSamplesData = async (
+	page: number,
+	perPage: number,
+	order: "asc" | "desc",
+	orderField: "gene" | "name" | "created",
+	filterName: string
+): Promise<PaginatedResponse<GetSampleResponse>> => {
 	let result: PaginatedResponse<GetSampleResponse> = {
 		total: 0,
 		page,
@@ -16,7 +22,7 @@ export const listSamplesData = async (page: number, perPage: number, order: "asc
 	result.total = await Samples.countDocuments();
 	if (result.total > 0) {
 		const samples = await Samples.find(filter)
-			.sort({ name: order })
+			.sort({ orderField: order })
 			.skip((page - 1) * perPage)
 			.limit(perPage)
 			.select("-__v");
