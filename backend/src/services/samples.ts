@@ -22,7 +22,7 @@ export const listSamplesData = async (
 	result.total = await Samples.countDocuments();
 	if (result.total > 0) {
 		const samples = await Samples.find(filter)
-			.sort({ orderField: order })
+			.sort({ [orderField]: order })
 			.skip((page - 1) * perPage)
 			.limit(perPage)
 			.select("-__v");
