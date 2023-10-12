@@ -54,7 +54,7 @@ function Row(props: { row: Gene & { samples: Sample[] } }) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div">
-                History
+                History (Last 10 Samples)
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
@@ -65,7 +65,10 @@ function Row(props: { row: Gene & { samples: Sample[] } }) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.samples.map((samplesRow) => (
+                  {(row.samples.length > 10
+                    ? row.samples.slice(0, 10)
+                    : row.samples
+                  ).map((samplesRow) => (
                     <TableRow key={samplesRow._id}>
                       <TableCell component="th" scope="row">
                         {samplesRow.created}
