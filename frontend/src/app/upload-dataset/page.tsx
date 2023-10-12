@@ -1,7 +1,6 @@
 "use client";
 
 import {
-    Alert,
   Card,
   Grid,
   Table,
@@ -19,7 +18,7 @@ export default function UploadForm() {
 
     try {
       const data = new FormData();
-      data.set("file", file);
+      data.set("samples", file);
 
       const res = await fetch("http://localhost:8080/import/tsv", {
         method: "POST",
@@ -28,11 +27,14 @@ export default function UploadForm() {
           Accept: "application/json",
         },
       });
-      // handle the error
-      if (!res.ok) Alert(await res.json());
+      if (res.status !== 200)
+        alert(
+          JSON.stringify((await res.json()).message) ||
+            "Something went wrong. Please try again later."
+        );
     } catch (e: any) {
       // Handle errors here
-      alert("Unknown error! Please try again later.");
+      alert(JSON.stringify("Something went wrong. Please try again later."));
       console.error(e);
     }
   };
@@ -47,7 +49,13 @@ export default function UploadForm() {
       sx={{ minHeight: "100vh" }}
     >
       <Grid item xs={8} color={"black"}>
-        <Card sx={{ minHeight: "30vh", minWidth: "30vw", padding: "5vh 5vw 10vh 5vw" }}>
+        <Card
+          sx={{
+            minHeight: "30vh",
+            minWidth: "30vw",
+            padding: "5vh 5vw 10vh 5vw",
+          }}
+        >
           <form onSubmit={onSubmit} id="dataset-upload">
             <Table>
               <TableHead>
@@ -56,7 +64,9 @@ export default function UploadForm() {
                     align="center"
                     style={{ borderBottomColor: "white" }}
                   >
-                    <h1><b>Upload Dataset in tsv Format</b></h1>
+                    <h1>
+                      <b>Upload Dataset in tsv Format</b>
+                    </h1>
                   </TableCell>
                 </TableRow>
               </TableHead>
