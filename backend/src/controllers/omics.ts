@@ -1,12 +1,23 @@
 import { Request, Response } from "express";
 import { AppError, ErrorCode, HttpStatus } from "../models/common";
-import { getOmicsData, listOmicsData, upsertOmics } from "../services/omics";
+import { getOmicsData, listOmicsData, listOmicsForInputData, upsertOmics } from "../services/omics";
 import logger from "../utils/logger";
 import { errorResponse } from "../utils/response";
 
 export const listOmicsHandler = async (req: Request, res: Response) => {
 	try {
 		const omics = await listOmicsData(req.validatedQuery.page, req.validatedQuery.perPage, req.validatedQuery.order);
+		res.status(HttpStatus.Success).json(omics);
+	} catch (error) {
+		logger.error(error);
+		errorResponse("Unknown error!", HttpStatus.InternalServerError, req, res);
+	}
+};
+
+
+export const listOmicsForInputHandler = async (req: Request, res: Response) => {
+	try {
+		const omics = await listOmicsForInputData();
 		res.status(HttpStatus.Success).json(omics);
 	} catch (error) {
 		logger.error(error);

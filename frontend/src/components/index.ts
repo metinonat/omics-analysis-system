@@ -9,6 +9,7 @@ import GenesTable from "./pages/Genes";
 import SamplesTable from "./pages/Samples";
 import TablePaginationActions from "./common/TablePaginationActions";
 import AllAnomaliesTable from "./analysis/AllAnomalies";
+import Title from "./common/Title";
 
 export {
   AppBar,
@@ -21,5 +22,6 @@ export {
   listItems,
   SamplesTable,
   TablePaginationActions,
+  Title,
   AllAnomaliesTable
 };

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Joi from "joi";
-import { getOmicsHandler, listOmicsHandler, upsertOmicsHandler } from "../controllers/omics";
+import { getOmicsHandler, listOmicsForInputHandler, listOmicsHandler, upsertOmicsHandler } from "../controllers/omics";
 import { validateRequest } from "../middlewares/validation";
 
 const router = Router();
@@ -14,6 +14,11 @@ router.get("/list", [
 		}),
 	}),
 	listOmicsHandler,
+]);
+
+
+router.get("/list/input", [
+	listOmicsForInputHandler,
 ]);
 
 router.get("/", [

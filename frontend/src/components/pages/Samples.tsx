@@ -23,9 +23,10 @@ export default function SamplesTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [data, setData] = React.useState([]);
+
   let error = false;
 
-  useEffect(() => {
+  const fetchSamples = () => {
     fetch("http://localhost:8080/samples/list")
       .then((response) => response.json())
       .then((result) => {
@@ -38,6 +39,9 @@ export default function SamplesTable() {
           error = false;
         }, 5000);
       });
+  };
+  useEffect(() => {
+    fetchSamples();
   }, []);
 
   const handleChangePage = (
@@ -71,14 +75,19 @@ export default function SamplesTable() {
                 <TableCell align="left">
                   <SearchBar />
                 </TableCell>
-                <TableCell />
-                <TableCell align="right">
-                  <CreateButton label="New Sample" />
+                <TableCell colSpan={3} align="right">
+                  <CreateButton
+                    label="New Sample"
+                    fetchSamples={fetchSamples}
+                  />
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>
                   <b>Sample Name</b>
+                </TableCell>
+                <TableCell >
+                  <b>Date</b>
                 </TableCell>
                 <TableCell align="right">
                   <b>Gene</b>
@@ -92,6 +101,7 @@ export default function SamplesTable() {
               {data.map((row: Sample) => (
                 <TableRow key={row._id}>
                   <TableCell>{row.name}</TableCell>
+                  <TableCell>{new Date(row.created).toLocaleString()}</TableCell>
                   <TableCell align="right">{row.gene}</TableCell>
                   <TableCell align="right">{row.value}</TableCell>
                 </TableRow>

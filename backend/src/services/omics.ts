@@ -32,6 +32,11 @@ export const listOmicsData = async (page: number, perPage: number, order: "asc" 
 	return result;
 };
 
+export const listOmicsForInputData = async () => {
+	const omics = await Omics.find().sort({ gene: "desc" }).select("-__v");
+	return omics.map((gene) => gene.toObject());
+};
+
 export const getOmicsData = async (params: { geneId?: Schema.Types.ObjectId; gene?: string }): Promise<OmicsData> => {
 	let result: OmicsData;
 	let gene;
