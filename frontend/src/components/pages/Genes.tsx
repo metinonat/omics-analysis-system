@@ -224,12 +224,9 @@ export default function GenesTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {emptyRows < rowsPerPage
-                ? data &&
-                  data.map((row: Gene & { samples: Sample[] }) => (
-                    <Row key={row._id} row={row} />
-                  ))
-                : null}
+              {data.map((row: Gene & { samples: Sample[] }) => (
+                <Row key={row._id} row={row} />
+              ))}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={6} />

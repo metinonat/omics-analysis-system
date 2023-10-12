@@ -3,7 +3,7 @@ import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
-import { Grid, TableFooter, TablePagination } from "@mui/material";
+import { Alert, Grid, TableFooter, TablePagination } from "@mui/material";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
@@ -15,32 +15,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
+import { useEffect } from "react";
 import CreateButton from "../common/Button";
 import SearchBar from "../common/SearchBar";
-
-function createData(id: string, name: string, gene: string, value: number) {
-  return {
-    id,
-    name,
-    gene,
-    value,
-  };
-}
-
-const rows = [
-  createData("1", "asd", "gene1", 12.44),
-  createData("2", "asd", "gene1", 1.4),
-  createData("3", "asd", "gene1", 0.4),
-  createData("4", "asd", "gene1", 6.2),
-  createData("5", "asd", "gene1", 12.44),
-  createData("6", "asd", "gene1", 1.4),
-  createData("7", "asd", "gene1", 0.4),
-  createData("8", "asd", "gene1", 6.2),
-  createData("9", "asd", "gene1", 12.44),
-  createData("10", "asd", "gene1", 1.4),
-  createData("11", "asd", "gene1", 0.4),
-  createData("12", "asd", "gene1", 6.2),
-];
 
 interface TablePaginationActionsProps {
   count: number;
@@ -125,10 +102,26 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
 export default function SamplesTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [data, setData] = React.useState([]);
+  let error = false;
+
+  useEffect(() => {
+    // Fetch data from an API or other source on the client side
+    fetch("http://localhost:8080/samples/list")
+      .then((response) => response.json())
+      .then((result) => {
+        setData(result.data);
+      })
+      .catch((error) => {
+        console.error(error);
+        error = true;
+        setTimeout(() => { error = false;} , 5000);
+      });
+  }, []);
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -158,7 +151,7 @@ export default function SamplesTable() {
           <Table aria-label="custom pagination table">
             <TableHead>
               <TableRow>
-                <TableCell>
+                <TableCell align="left">
                   <SearchBar />
                 </TableCell>
                 <TableCell align="right">
@@ -178,14 +171,8 @@ export default function SamplesTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {(rowsPerPage > 0
-                ? rows.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : rows
-              ).map((row) => (
-                <TableRow key={row.id}>
+              {data.map((row: Sample) => (
+                <TableRow key={row._id}>
                   <TableCell>{row.name}</TableCell>
                   <TableCell align="right">{row.gene}</TableCell>
                   <TableCell align="right">{row.value}</TableCell>
@@ -202,7 +189,7 @@ export default function SamplesTable() {
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
                   colSpan={3}
-                  count={rows.length}
+                  count={data.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
                   SelectProps={{
@@ -220,6 +207,7 @@ export default function SamplesTable() {
           </Table>
         </TableContainer>
       </Grid>
+      <Alert severity="error" action={error}>This is an error alert — check it out!</Alert>
     </Grid>
   );
 }
