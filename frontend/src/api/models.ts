@@ -14,7 +14,7 @@ interface Sample {
 }
 
 interface GeneAnalysis {
-  id: string;
+  _id: string;
   gene: string;
   mean: number;
   stdDev: number;

@@ -52,6 +52,7 @@ export const getZScoreOutliers = async (threshold: number, genes: string[]): Pro
 					$push: {
 						name: "$name",
 						value: "$value",
+						created: "$created",
 					},
 				},
 			},

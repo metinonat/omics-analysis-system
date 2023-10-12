@@ -57,9 +57,9 @@ function Row(props: { row: GeneAnalysis }) {
                 </TableHead>
                 <TableBody>
                   {row.samples.map((samplesRow) => (
-                    <TableRow key={samplesRow._id}>
+                    <TableRow key={samplesRow.name}>
                       <TableCell component="th" scope="row">
-                        {samplesRow.created}
+                        {new Date(samplesRow.created).toLocaleString()}
                       </TableCell>
                       <TableCell>{samplesRow.name}</TableCell>
                       <TableCell align="right">{samplesRow.value}</TableCell>
@@ -94,7 +94,7 @@ export default function AllAnomaliesTable() {
     })
       .then((response) => response.json())
       .then((result) => {
-        setData(result.data.data);
+        setData(result);
       })
       .catch((error) => console.error(error));
   }, []);
@@ -112,9 +112,7 @@ export default function AllAnomaliesTable() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  console.log(
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0
-  );
+  
   return (
     <Grid
       container
@@ -137,9 +135,6 @@ export default function AllAnomaliesTable() {
                   <b>Mean</b>
                 </TableCell>
                 <TableCell align="right">
-                  <b>Median</b>
-                </TableCell>
-                <TableCell align="right">
                   <b>Standart Deviation</b>
                 </TableCell>
                 <TableCell align="right">
@@ -150,7 +145,7 @@ export default function AllAnomaliesTable() {
             </TableHead>
             <TableBody>
               {data.map((row: GeneAnalysis) => (
-                <Row key={row.id} row={row} />
+                <Row key={row._id} row={row} />
               ))}
               {data.length == 0 && (
                 <TableRow style={{ height: 53 }}>
@@ -170,7 +165,7 @@ export default function AllAnomaliesTable() {
               <TableRow>
                 <TablePagination
                   rowsPerPageOptions={[5, 10, 25, { label: "All", value: -1 }]}
-                  colSpan={3}
+                  colSpan={6}
                   count={data.length}
                   rowsPerPage={rowsPerPage}
                   page={page}
