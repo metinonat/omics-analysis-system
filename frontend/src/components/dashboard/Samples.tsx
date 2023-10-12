@@ -13,7 +13,6 @@ let lastRequestTime: number = Date.now() - 1000 * 60;
 
 export default function Samples() {
   const [data, setData] = useState([]);
-  let emptyItemCount = 0;
 
   useEffect(() => {
     rateLimitedApiRequest(lastRequestTime, () => {
@@ -21,8 +20,6 @@ export default function Samples() {
       axios
         .get(`http://localhost:8080/samples/list`)
         .then((res) => {
-          emptyItemCount =
-            3 - res.data.data.length > 0 ? 3 - res.data.data.length : 0;
           setData(res.data.data);
         })
         .catch((error) => console.error(error));
@@ -43,9 +40,7 @@ export default function Samples() {
         <TableBody>
           {data.map((sample: Sample) => (
             <TableRow key={sample._id}>
-              <TableCell>
-                {new Date(sample.created).toLocaleString()}
-              </TableCell>
+              <TableCell>{new Date(sample.created).toLocaleString()}</TableCell>
               <TableCell>{sample.name}</TableCell>
               <TableCell>{sample.gene}</TableCell>
               <TableCell align="right">{`${sample.value}`}</TableCell>

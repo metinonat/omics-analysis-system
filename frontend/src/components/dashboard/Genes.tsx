@@ -18,7 +18,7 @@ const Demo = styled("div")(({ theme }) => ({
 export default function InteractiveList() {
   const [dense] = React.useState(false);
   const [data, setData] = useState([]);
-  let emptyItemCount = 0;
+  const [emptyItemCount, setEmptyItemCount] = useState<number>(0);
   const emptyItems = ["empty1", "empty2", "empty3"];
 
   useEffect(() => {
@@ -27,8 +27,9 @@ export default function InteractiveList() {
       axios
         .get(`http://localhost:8080/omics/list`)
         .then((res) => {
-          emptyItemCount =
-            3 - res.data.data.length > 0 ? 3 - res.data.data.length : 0;
+          setEmptyItemCount(
+            3 - res.data.data.length > 0 ? 3 - res.data.data.length : 0
+          );
           setData(res.data.data);
         })
         .catch((error) => console.error(error));
