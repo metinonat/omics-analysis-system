@@ -26,8 +26,9 @@ export default function SamplesTable() {
 
   let error = false;
 
-  const fetchSamples = () => {
-    fetch("http://localhost:8080/samples/list")
+  const fetchSamples = (filter?: string) => {
+    const url = filter ? `http://localhost:8080/samples/list?filterName=${filter}` : "http://localhost:8080/samples/list";
+    fetch(url)
       .then((response) => response.json())
       .then((result) => {
         setData(result.data);
@@ -73,7 +74,7 @@ export default function SamplesTable() {
             <TableHead>
               <TableRow>
                 <TableCell align="left">
-                  <SearchBar />
+                  <SearchBar search={fetchSamples} />
                 </TableCell>
                 <TableCell colSpan={3} align="right">
                   <CreateButton
@@ -86,7 +87,7 @@ export default function SamplesTable() {
                 <TableCell>
                   <b>Sample Name</b>
                 </TableCell>
-                <TableCell >
+                <TableCell>
                   <b>Date</b>
                 </TableCell>
                 <TableCell align="right">
@@ -101,7 +102,9 @@ export default function SamplesTable() {
               {data.map((row: Sample) => (
                 <TableRow key={row._id}>
                   <TableCell>{row.name}</TableCell>
-                  <TableCell>{new Date(row.created).toLocaleString()}</TableCell>
+                  <TableCell>
+                    {new Date(row.created).toLocaleString()}
+                  </TableCell>
                   <TableCell align="right">{row.gene}</TableCell>
                   <TableCell align="right">{row.value}</TableCell>
                 </TableRow>
