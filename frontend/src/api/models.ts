@@ -12,3 +12,11 @@ interface Sample {
   value: number;
   gene: string;
 }
+
+interface GeneAnalysis {
+  id: string;
+  gene: string;
+  mean: number;
+  stdDev: number;
+  samples: Sample[];
+}

@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import GenesTable from "./pages/Genes";
 import SamplesTable from "./pages/Samples";
 import TablePaginationActions from "./common/TablePaginationActions";
+import AllAnomaliesTable from "./analysis/AllAnomalies";
 
 export {
   AppBar,
@@ -20,4 +21,5 @@ export {
   listItems,
   SamplesTable,
   TablePaginationActions,
+  AllAnomaliesTable
 };
