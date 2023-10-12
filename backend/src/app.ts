@@ -6,6 +6,7 @@ logger.info("Config is loaded...");
 
 import http from "http";
 import { router } from "./routes/router";
+import cors from "cors";
 import { connectDb } from "./utils/utils";
 
 const app: Express = express();
@@ -15,6 +16,12 @@ const start = async () => {
 
 	const httpServer = http.createServer(app);
 
+	app.use(
+		cors({
+			origin: true,
+			credentials: true,
+		})
+	);
 	app.use(express.json());
 	app.use(express.urlencoded({ extended: true }));
 	app.use(router);

@@ -7,4 +7,6 @@ RUN npm install
 
 RUN mkdir -p /usr/app/uploads
 
-COPY dist/ ./ 
+COPY dist/ ./
+
+# @todo tsc build instead of copy dist 

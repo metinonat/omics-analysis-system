@@ -60,6 +60,7 @@ services:
       dockerfile: ./Dockerfile
     environment:
       - DRAWER_WIDTH=240
+      - API_URL=http://omics-backend:8080
     ports:
       - 8000:3000
     command: ["npm", "start"]

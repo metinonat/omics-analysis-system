@@ -1,3 +1,4 @@
+import { rateLimitedApiRequest } from "@/api/request";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
@@ -5,8 +6,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import { styled } from "@mui/material/styles";
-
-import * as React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import Title from "../common/Title";
 
 const Demo = styled("div")(({ theme }) => ({
@@ -15,22 +16,45 @@ const Demo = styled("div")(({ theme }) => ({
 
 export default function InteractiveList() {
   const [dense] = React.useState(false);
+  const [data, setData] = useState([]);
+  let emptyItemCount = 0;
+  const emptyItems = ["empty1", "empty2", "empty3"];
 
+  useEffect(() => {
+    rateLimitedApiRequest(() => {
+      //@todo cannot get .env @see https://stackoverflow.com/questions/76280634/nextjs-app-not-read-environment-variables-from-docker-compose-yml
+      axios
+        .get(`http://localhost:8080/omics/list`)
+        .then((res) => {
+          emptyItemCount =
+            3 - res.data.data.length > 0 ? 3 - res.data.data.length : 0;
+          setData(res.data.data);
+        })
+        .catch((error) => console.error(error));
+    });
+  }, []);
   return (
     <Box sx={{ flexGrow: 1, maxWidth: 752 }}>
       <React.Fragment>
         <Title>Genes</Title>
         <Demo>
           <List dense={dense}>
-            <ListItem>
-              <ListItemText primary="Gene1" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Gene2" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Gene3" />
-            </ListItem>
+            {data.map((item: Gene) => (
+              <ListItem key={item._id}>
+                <ListItemText primary={item.gene} />
+              </ListItem>
+            ))}
+            {emptyItems.map((item: string) => (
+              <ListItem key={item}>
+                <ListItemText
+                  primary={
+                    emptyItemCount == 3 && item === emptyItems[1]
+                      ? "No genes to show."
+                      : ""
+                  }
+                />
+              </ListItem>
+            ))}
           </List>
         </Demo>
         <div
