@@ -4,7 +4,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import { ListItem } from "@mui/material";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import ListItemText from "@mui/material/ListItemText";import UploadIcon from '@mui/icons-material/Upload';
 import Link from "next/link";
 import * as React from "react";
 export const listItems = (
@@ -46,6 +46,16 @@ export const listItems = (
             <BarChartIcon />
           </ListItemIcon>
           <ListItemText primary="Analysis" />
+        </ListItemButton>
+      </Link>
+    </ListItem>
+    <ListItem disablePadding>
+      <Link href={"/upload-dataset"} passHref>
+        <ListItemButton>
+          <ListItemIcon>
+            <UploadIcon />
+          </ListItemIcon>
+          <ListItemText primary="Upload Dataset" />
         </ListItemButton>
       </Link>
     </ListItem>
