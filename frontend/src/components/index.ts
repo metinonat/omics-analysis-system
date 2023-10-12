@@ -7,6 +7,7 @@ import Samples from "./dashboard/Samples";
 import Dashboard from "./pages/Dashboard";
 import GenesTable from "./pages/Genes";
 import SamplesTable from "./pages/Samples";
+import TablePaginationActions from "./common/TablePaginationActions";
 
 export {
   AppBar,
@@ -17,5 +18,6 @@ export {
   GenesTable,
   Samples,
   listItems,
-  SamplesTable
+  SamplesTable,
+  TablePaginationActions,
 };
