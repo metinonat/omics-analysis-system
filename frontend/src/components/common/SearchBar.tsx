@@ -12,7 +12,7 @@ export default function SearchBar(props: SearchBarProps) {
 
   useEffect(() => {
     search(value);
-  },[value]);
+  },[value, search]);
 
   return (
     <TextField

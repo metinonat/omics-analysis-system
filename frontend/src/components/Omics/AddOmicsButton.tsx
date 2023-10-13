@@ -4,7 +4,6 @@ import AddIcon from "@mui/icons-material/Add";
 import {
   Button,
   Grid,
-  MenuItem,
   Table,
   TableCell,
   TableFooter,
@@ -14,7 +13,7 @@ import {
 import { Box, Theme, styled } from "@mui/system";
 import clsx from "clsx";
 import * as React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Title } from "..";
 
 const Backdrop = React.forwardRef<
@@ -72,11 +71,9 @@ interface CreateButtonProps {
 
 export default function AddOmicsButton(props: CreateButtonProps) {
   const [open, setOpen] = React.useState(false);
-  const [genes, setGenes] = React.useState([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const { register, handleSubmit, watch } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const { register, handleSubmit } = useForm<Inputs>();
 
   return (
     <div>

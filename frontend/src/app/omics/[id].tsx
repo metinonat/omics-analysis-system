@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-export default function geneDetail() {
+export default function GeneDetail() {
   const { id } = useRouter().query;
   return (
     <div>

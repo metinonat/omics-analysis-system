@@ -11,8 +11,8 @@ import TablePaginationActions from "./common/TablePaginationActions";
 import AllAnomaliesTable from "./analysis/AllAnomalies";
 import Title from "./common/Title";
 import SearchBar from "./common/SearchBar";
-import AddOmicsButton from "./Omics/AddOmicsButton";
-import AddSampleButton from "./Samples/AddSampleButton";
+import AddOmicsButton from "./omics/AddOmicsButton";
+import AddSampleButton from "./samples/AddSampleButton";
 
 export {
   AppBar,

@@ -15,8 +15,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import * as React from "react";
 import { useEffect } from "react";
-import { TablePaginationActions } from "..";
-import CreateButton from "../Samples/AddSampleButton";
+import { AddSampleButton, TablePaginationActions } from "..";
 import SearchBar from "../common/SearchBar";
 
 export default function SamplesTable() {
@@ -27,7 +26,9 @@ export default function SamplesTable() {
   let error = false;
 
   const fetchSamples = (filter?: string) => {
-    const url = filter ? `http://localhost:8080/samples/list?filterName=${filter}` : "http://localhost:8080/samples/list";
+    const url = filter
+      ? `http://localhost:8080/samples/list?filterName=${filter}`
+      : "http://localhost:8080/samples/list";
     fetch(url)
       .then((response) => response.json())
       .then((result) => {
@@ -77,7 +78,7 @@ export default function SamplesTable() {
                   <SearchBar search={fetchSamples} />
                 </TableCell>
                 <TableCell colSpan={3} align="right">
-                  <CreateButton
+                  <AddSampleButton
                     label="New Sample"
                     fetchSamples={fetchSamples}
                   />
