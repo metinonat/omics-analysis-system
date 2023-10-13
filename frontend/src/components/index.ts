@@ -13,6 +13,7 @@ import Title from "./common/Title";
 import SearchBar from "./common/SearchBar";
 import AddOmicsButton from "./omics/AddOmicsButton";
 import AddSampleButton from "./samples/AddSampleButton";
+import ExpressionChart from "./analysis/ExpressionChart";
 
 export {
   AppBar,
@@ -29,5 +30,6 @@ export {
   AllAnomaliesTable,
   SearchBar,
   AddOmicsButton,
-  AddSampleButton
+  AddSampleButton,
+  ExpressionChart
 };

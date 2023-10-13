@@ -121,3 +121,51 @@ export const getZScoreOutliers = async (threshold: number, genes: string[]): Pro
 	const outliers = await Samples.aggregate(pipeline);
 	return outliers;
 };
+
+export const getChartData = async (genes: string[]): Promise<any> => {
+	if (genes.length === 1) {
+		const gene = await Omics.findOne({ gene: genes[0] }).exec();
+		if (!gene) {
+			throw new AppError(ErrorCode.NotFound, `Gene not found!`);
+		}
+		const samples = await Samples.find({ geneId: gene.id }).sort({ created: "asc" }).exec();
+		return {
+			labels: samples.map((sample) => sample.name),
+			datasets: [
+				{
+					label: gene.gene,
+					data: samples.map((sample) => sample.value),
+				},
+			],
+		};
+	} else {
+		const genesList = await Omics.find({ gene: { $in: genes } }).exec();
+		if (!genesList) {
+			throw new AppError(ErrorCode.NotFound, `Gene not found!`);
+		}
+		const labels = await Samples.find({ geneId: { $in: genesList.map((gene) => gene.id) } })
+			.sort({ created: "asc" })
+			.distinct("name")
+			.exec();
+		const samples = await Samples.find({ geneId: { $in: genesList.map((gene) => gene.id) } })
+			.sort({ created: "asc" })
+			.exec();
+		const maxExpression = samples.reduce((max, sample) => (sample.value > max ? sample.value : max), 0);
+		const minExpression = samples.reduce((min, sample) => (sample.value < min ? sample.value : min), 0);
+		return {
+			labels,
+			datasets: genesList.map((gene) => {
+				let data = [];
+				for (let i = 0; i < labels.length; i++) {
+					data.push(samples.find((sample) => sample.name === labels[i] && sample.geneId == gene.id)?.value ?? -1);
+				}
+				return {
+					label: gene.gene,
+					data,
+				};
+			}),
+			max: maxExpression + Math.floor(maxExpression * 0.1),
+			min: minExpression - Math.floor(minExpression * 0.1),
+		};
+	}
+};

@@ -36,7 +36,7 @@ export const listOmicsData = async (page: number, perPage: number, order: "asc" 
 
 export const listOmicsForInputData = async (filter?: string) => {
 	let filterObj = {};
-	if (filter) filterObj = { name: { $regex: ".*" + filter + ".*" } };
+	if (filter) filterObj = { gene: { $regex: ".*" + filter + ".*" } };
 	const omics = await Omics.find(filterObj).sort({ gene: "desc" }).select("-__v");
 	return omics.map((gene) => gene.toObject());
 };

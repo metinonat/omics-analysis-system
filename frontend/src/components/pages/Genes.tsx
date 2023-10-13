@@ -150,7 +150,7 @@ export default function GenesTable() {
             <TableHead>
               <TableRow>
                 <TableCell colSpan={2} align="left">
-                  <SearchBar search={fetchOmics} />
+                  <SearchBar search={fetchOmics} label="Search Genes"/>
                 </TableCell>
                 <TableCell colSpan={4} align="right">
                   <AddOmicsButton label="New Omics" fetchOmics={fetchOmics} />

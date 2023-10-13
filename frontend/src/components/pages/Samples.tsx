@@ -75,7 +75,7 @@ export default function SamplesTable() {
             <TableHead>
               <TableRow>
                 <TableCell align="left">
-                  <SearchBar search={fetchSamples} />
+                  <SearchBar search={fetchSamples} label="Search Samples"/>
                 </TableCell>
                 <TableCell colSpan={3} align="right">
                   <AddSampleButton

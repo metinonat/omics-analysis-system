@@ -1,9 +1,8 @@
 "use client";
 
-import { AllAnomaliesTable } from "@/components";
+import { AllAnomaliesTable, ExpressionChart } from "@/components";
 import { Box, Container, Tab, Tabs, Toolbar } from "@mui/material";
 
-import Typography from "@mui/material/Typography";
 import * as React from "react";
 
 interface TabPanelProps {
@@ -24,9 +23,7 @@ function CustomTabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3, position: "relative" }}>
-          {children}
-        </Box>
+        <Box sx={{ p: 3, position: "relative" }}>{children}</Box>
       )}
     </div>
   );
@@ -65,22 +62,18 @@ export default function AnalysisPage() {
               }}
             >
               <Tab label="All Anomalies" {...a11yProps(0)} />
-              <Tab label="Choose Genes (Anomaly)" {...a11yProps(1)} />
-              <Tab label="Choose Genes (Expression)" {...a11yProps(2)} />
-              <Tab label="Expression Heatmap" {...a11yProps(3)} />
+              <Tab label="Genes Expression" {...a11yProps(1)} />
+              <Tab label="Expression Heatmap" {...a11yProps(2)} />
             </Tabs>
           </Box>
           <CustomTabPanel value={value} index={0}>
             <AllAnomaliesTable />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
-            Item Two
+            <ExpressionChart />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
             Item Three
-          </CustomTabPanel>
-          <CustomTabPanel value={value} index={3}>
-            Item Four
           </CustomTabPanel>
         </Box>
       </Container>
