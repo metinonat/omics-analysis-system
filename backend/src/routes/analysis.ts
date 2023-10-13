@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Joi from "joi";
-import { getChartDataHandler, getGeneAnalysisHandler, getZScoreOutliersHandler } from "../controllers/analysis";
+import { getBoxPlotDataHandler, getChartDataHandler, getGeneAnalysisHandler, getZScoreOutliersHandler } from "../controllers/analysis";
 import { validateRequest } from "../middlewares/validation";
 
 const router = Router();
@@ -24,7 +24,6 @@ router.post("/outliers/z-score", [
 	getZScoreOutliersHandler,
 ]);
 
-
 router.post("/chart-data", [
 	validateRequest({
 		bodySchema: Joi.object({
@@ -34,5 +33,14 @@ router.post("/chart-data", [
 	getChartDataHandler,
 ]);
 
+router.post("/box-plot-data", [
+	validateRequest({
+		bodySchema: Joi.object({
+			threshold: Joi.number().required(),
+			genes: Joi.array().items(Joi.string()).required(),
+		}),
+	}),
+	getBoxPlotDataHandler,
+]);
 
 export default router;

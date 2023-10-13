@@ -18,3 +18,11 @@ export type GeneAnalysisResponse = {
 	variance: number;
 	standartDeviation: number;
 };
+
+export type ZScoreOutliersResponse = {
+	_id: string;
+	gene: string;
+	mean: number;
+	stdDev: number;
+	samples: (ISamples & { _id: string })[];
+};
