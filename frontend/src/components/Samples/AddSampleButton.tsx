@@ -20,7 +20,7 @@ import { Title } from "..";
 const Backdrop = React.forwardRef<
   HTMLDivElement,
   { open?: boolean; className: string }
->((props, ref) => {
+>(function BackdropFunc(props, ref) {
   const { open, className, ...other } = props;
   return (
     <div

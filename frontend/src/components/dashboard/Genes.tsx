@@ -30,7 +30,7 @@ export default function InteractiveList() {
           setEmptyItemCount(
             3 - res.data.data.length > 0 ? 3 - res.data.data.length : 0
           );
-          setData(res.data.data);
+          setData(res.data.data.splice(0, 3));
         })
         .catch((error) => console.error(error));
     });

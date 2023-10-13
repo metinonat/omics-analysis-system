@@ -121,7 +121,7 @@ export default function OmicsDetail() {
                 {data?.transcript[0] &&
                   data?.transcript[0].split(",").map((trx) => {
                     return (
-                      <Typography sx={{ marginLeft: 2 }}> {trx}</Typography>
+                      <Typography sx={{ marginLeft: 2 }} key={trx}> {trx}</Typography>
                     );
                   })}
               </List>

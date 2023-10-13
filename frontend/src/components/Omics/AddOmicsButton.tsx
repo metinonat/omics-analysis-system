@@ -19,7 +19,7 @@ import { Title } from "..";
 const Backdrop = React.forwardRef<
   HTMLDivElement,
   { open?: boolean; className: string }
->((props, ref) => {
+>(function BackdropFunc(props, ref) {
   const { open, className, ...other } = props;
   return (
     <div
@@ -90,7 +90,7 @@ export default function AddOmicsButton(props: CreateButtonProps) {
         <Box sx={style}>
           <Title> Add A Gene </Title>
           <form
-            onSubmit={handleSubmit(async (data) => {
+            onSubmit={handleSubmit(async function AddNewOmics(data) {
               const response = await fetch("http://localhost:8080/omics/", {
                 method: "POST",
                 headers: {
