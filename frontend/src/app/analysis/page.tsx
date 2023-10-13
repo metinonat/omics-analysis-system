@@ -1,6 +1,7 @@
 "use client";
 
 import { AllAnomaliesTable, ExpressionChart } from "@/components";
+import BoxPlot from "@/components/analysis/BoxPlot";
 import { Box, Container, Tab, Tabs, Toolbar } from "@mui/material";
 
 import * as React from "react";
@@ -73,7 +74,7 @@ export default function AnalysisPage() {
             <ExpressionChart />
           </CustomTabPanel>
           <CustomTabPanel value={value} index={2}>
-            Item Three
+            <BoxPlot />
           </CustomTabPanel>
         </Box>
       </Container>
