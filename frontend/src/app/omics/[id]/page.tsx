@@ -46,12 +46,12 @@ export default function OmicsDetail() {
   });
 
   React.useEffect(() => {
-    fetch(`http://localhost:8080/omics?geneId=${params.id}`)
+    fetch(`${process.env}/omics?geneId=${params.id}`)
       .then(async (response) => {
         setData(await response.json());
       })
       .catch((error) => console.error(error));
-    fetch(`http://localhost:8080/analysis/gene/${params.id}`)
+    fetch(`${process.env}/analysis/gene/${params.id}`)
       .then(async (response) => {
         setAnalysis(await response.json());
       })

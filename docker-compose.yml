@@ -51,7 +51,7 @@ services:
     ports:
       - 8080:8080
       - 9229:9229
-    command: ["node", "--inspect=0.0.0.0:9229", "app.js"]
+    command: ["node", "--inspect=0.0.0.0:9229", "dist/app.js"]
     tty: true
   omics-frontend:
     image: omics-frontend
@@ -60,7 +60,7 @@ services:
       dockerfile: ./Dockerfile
     environment:
       - DRAWER_WIDTH=240
-      - API_URL=http://omics-backend:8080
+      - API_URL=http://localhost:1000
     ports:
       - 8000:3000
     command: ["npm", "start"]

@@ -21,7 +21,7 @@ export default function UploadForm() {
       const data = new FormData();
       data.set("samples", file);
 
-      const res = await fetch("http://localhost:8080/import/tsv", {
+      const res = await fetch(`${process.env.API_URL}/import/tsv`, {
         method: "POST",
         body: data,
         headers: {

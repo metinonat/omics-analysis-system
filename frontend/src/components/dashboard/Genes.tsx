@@ -25,7 +25,7 @@ export default function InteractiveList() {
     rateLimitedApiRequest(lastRequestTime, () => {
       //@todo cannot get .env @see https://stackoverflow.com/questions/76280634/nextjs-app-not-read-environment-variables-from-docker-compose-yml
       axios
-        .get(`http://localhost:8080/omics/list`)
+        .get(`${process.env.API_URL}/omics/list`)
         .then((res) => {
           setEmptyItemCount(
             3 - res.data.data.length > 0 ? 3 - res.data.data.length : 0

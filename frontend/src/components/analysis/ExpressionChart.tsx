@@ -8,7 +8,7 @@ import {
   Colors,
   LinearScale,
 } from "chart.js";
-import React, { use } from "react";
+import React from "react";
 import { Bar } from "react-chartjs-2";
 import MultiSelect from "../common/MultiSelect";
 
@@ -25,14 +25,14 @@ export default function ExpressionChart() {
   });
 
   React.useEffect(() => {
-    console.log(genes)
-  }, [genes])
+    console.log(genes);
+  }, [genes]);
 
   Chart.register(Colors);
   return (
     <>
       <MultiSelect
-        dataFetchUrl="http://localhost:8080/analysis/chart-data"
+        dataFetchUrl={`${process.env.API_URL}/analysis/chart-data`}
         setData={setGenes}
         useThreshold={false}
       />

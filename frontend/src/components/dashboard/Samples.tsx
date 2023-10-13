@@ -18,7 +18,7 @@ export default function Samples() {
     rateLimitedApiRequest(lastRequestTime, () => {
       //@todo cannot get .env @see https://stackoverflow.com/questions/76280634/nextjs-app-not-read-environment-variables-from-docker-compose-yml
       axios
-        .get(`http://localhost:8080/samples/list?order=desc&orderField=created`)
+        .get(`${process.env.API_URL}/samples/list?order=desc&orderField=created`)
         .then((res) => {
           setData(res.data.data);
         })

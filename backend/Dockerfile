@@ -3,10 +3,10 @@ FROM node:14.15.4-alpine3.12
 WORKDIR /usr/app
 
 COPY ["package.json", "package-lock.json*", "./"]
-RUN npm install
+RUN npm install && npm install typescript -g
 
 RUN mkdir -p /usr/app/uploads
 
-COPY dist/ ./
+COPY . .
 
-# @todo tsc build instead of copy dist 
+RUN tsc -p tsconfig.build.json

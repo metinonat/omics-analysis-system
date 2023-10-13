@@ -82,7 +82,7 @@ export default function AllAnomaliesTable() {
   const [threshold, setThreshold] = React.useState<string>("1.00");
 
   const fecthData = () => {
-    fetch("http://localhost:8080/analysis/outliers/z-score", {
+    fetch(`${process.env.API_URL}/analysis/outliers/z-score`, {
       method: "POST",
       body: JSON.stringify({
         threshold: parseFloat(threshold ?? "0.001"),

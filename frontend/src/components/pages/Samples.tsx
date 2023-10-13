@@ -27,8 +27,8 @@ export default function SamplesTable() {
 
   const fetchSamples = (filter?: string) => {
     const url = filter
-      ? `http://localhost:8080/samples/list?filterName=${filter}`
-      : "http://localhost:8080/samples/list";
+      ? `${process.env.API_URL}/samples/list?filterName=${filter}`
+      : `${process.env.API_URL}/samples/list`;
     fetch(url)
       .then((response) => response.json())
       .then((result) => {

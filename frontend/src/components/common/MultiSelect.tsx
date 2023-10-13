@@ -48,8 +48,8 @@ export default function MultiSelect(props: MultiSelectProps) {
 
   const fetchGenesList = (filter?: string) => {
     const url = filter
-      ? "http://localhost:8080/omics/list/input?filter=" + filter
-      : "http://localhost:8080/omics/list/input";
+      ? `${process.env.API_URL}/omics/list/input?filter=` + filter
+      : `${process.env.API_URL}/omics/list/input`;
     fetch(url)
       .then((response) => response.json())
       .then((result) => {

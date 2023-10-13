@@ -81,8 +81,8 @@ export default function AddSampleButton(props: CreateButtonProps) {
 
   const fecthGenesForSelect = (filter?: string) => {
     const url = filter
-      ? `http://localhost:8080/omics/list/input?filter=${filter}`
-      : "http://localhost:8080/omics/list/input";
+      ? `${process.env.API_URL}/omics/list/input?filter=${filter}`
+      : `${process.env.API_URL}/omics/list/input`;
     fetch(url)
       .then((response) => response.json())
       .then((result) => {
@@ -121,7 +121,7 @@ export default function AddSampleButton(props: CreateButtonProps) {
                 name: data.name,
                 value: data.value,
               };
-              const response = await fetch("http://localhost:8080/samples/", {
+              const response = await fetch(`${process.env.API_URL}/samples/`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

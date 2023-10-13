@@ -89,7 +89,7 @@ export default function BoxPlot() {
   return (
     <>
       <MultiSelect
-        dataFetchUrl="http://localhost:8080/analysis/box-plot-data"
+        dataFetchUrl={`${process.env.API_URL}/analysis/box-plot-data`}
         setData={setData}
         useThreshold={true}
       />

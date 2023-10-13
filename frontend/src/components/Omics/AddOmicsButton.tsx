@@ -91,7 +91,7 @@ export default function AddOmicsButton(props: CreateButtonProps) {
           <Title> Add A Gene </Title>
           <form
             onSubmit={handleSubmit(async function AddNewOmics(data) {
-              const response = await fetch("http://localhost:8080/omics/", {
+              const response = await fetch(`${process.env.API_URL}/omics/`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",

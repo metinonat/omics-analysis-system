@@ -108,8 +108,8 @@ export default function GenesTable() {
 
   const fetchOmics = (filter?: string) => {
     const url = filter
-      ? `http://localhost:8080/omics/list?filter=${filter}`
-      : "http://localhost:8080/omics/list";
+      ? `${process.env.API_URL}/omics/list?filter=${filter}`
+      : `${process.env.API_URL}/omics/list`;
     fetch(url)
       .then((response) => response.json())
       .then((result) => {
