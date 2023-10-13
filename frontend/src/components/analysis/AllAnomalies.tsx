@@ -2,7 +2,7 @@
 
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { Grid, TableFooter, TablePagination } from "@mui/material";
+import { Grid, TableFooter, TablePagination, TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
@@ -79,12 +79,13 @@ export default function AllAnomaliesTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [data, setData] = React.useState<Array<GeneAnalysis>>([]);
+  const [threshold, setThreshold] = React.useState<string>("1.00");
 
-  useEffect(() => {
+  const fecthData = () => {
     fetch("http://localhost:8080/analysis/outliers/z-score", {
       method: "POST",
       body: JSON.stringify({
-        threshold: 1,
+        threshold: parseFloat(threshold ?? "0.001"),
         genes: [],
       }),
       headers: {
@@ -97,7 +98,11 @@ export default function AllAnomaliesTable() {
         setData(result);
       })
       .catch((error) => console.error(error));
-  }, []);
+  };
+
+  useEffect(() => {
+    fecthData();
+  }, [threshold]);
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -112,7 +117,7 @@ export default function AllAnomaliesTable() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  
+
   return (
     <Grid
       container
@@ -122,6 +127,22 @@ export default function AllAnomaliesTable() {
       justifyContent="center"
       sx={{ overflow: "auto", maxHeight: "100vh" }}
     >
+      <Grid width="100%" display={"flex"} justifyContent={"end"}>
+        <TextField
+          id="threshold"
+          label="Threshold"
+          variant="standard"
+          placeholder="1"
+          value={threshold}
+          onChange={(event) => {
+            setThreshold(event.target.value);
+          }}
+          inputProps={{
+            inputMode: "numeric",
+            pattern: "[0-9]*.[0-9]*",
+          }}
+        />
+      </Grid>
       <Grid sx={{ position: "absolute", top: "10vh", bottom: "10vh" }}>
         <TableContainer sx={{ minWidth: "70vw" }} component={Paper}>
           <Table aria-label="custom pagination collapsible table">
@@ -144,9 +165,10 @@ export default function AllAnomaliesTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row: GeneAnalysis) => (
-                <Row key={row._id} row={row} />
-              ))}
+              {data.length != 0 &&
+                data.map((row: GeneAnalysis) => (
+                  <Row key={row._id} row={row} />
+                ))}
               {data.length == 0 && (
                 <TableRow style={{ height: 53 }}>
                   <TableCell colSpan={6}>
