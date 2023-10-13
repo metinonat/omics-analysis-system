@@ -4,6 +4,7 @@ import {
   Card,
   Grid,
   Table,
+  TableBody,
   TableCell,
   TableHead,
   TableRow,
@@ -70,26 +71,31 @@ export default function UploadForm() {
                   </TableCell>
                 </TableRow>
               </TableHead>
-              <TableRow>
-                <TableCell style={{ borderBottomColor: "white" }}>
-                  <input
-                    type="file"
-                    name="file"
-                    onChange={(e) => setFile(e.target.files?.[0])}
-                  />
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell align="right" style={{ borderBottomColor: "white" }}>
-                  <button
-                    className="bg-black hover:bg-slate-800 text-white text-sm font-medium p-2 rounded "
-                    type="button"
-                    onClick={onSubmit}
+              <TableBody>
+                <TableRow>
+                  <TableCell style={{ borderBottomColor: "white" }}>
+                    <input
+                      type="file"
+                      name="file"
+                      onChange={(e) => setFile(e.target.files?.[0])}
+                    />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell
+                    align="right"
+                    style={{ borderBottomColor: "white" }}
                   >
-                    <>Submit</>
-                  </button>
-                </TableCell>
-              </TableRow>
+                    <button
+                      className="bg-black hover:bg-slate-800 text-white text-sm font-medium p-2 rounded "
+                      type="button"
+                      onClick={onSubmit}
+                    >
+                      <>Submit</>
+                    </button>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             </Table>
           </form>
         </Card>
