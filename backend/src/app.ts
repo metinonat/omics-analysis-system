@@ -4,9 +4,9 @@ import logger from "./utils/logger";
 import config from "./config";
 logger.info("Config is loaded...");
 
+import cors from "cors";
 import http from "http";
 import { router } from "./routes/router";
-import cors from "cors";
 import { connectDb } from "./utils/utils";
 
 const app: Express = express();
@@ -18,8 +18,8 @@ const start = async () => {
 
 	app.use(
 		cors({
-			origin: true,
-			credentials: true,
+			origin: "*",
+			methods: ["GET", "POST", "PUT", "DELETE"],
 		})
 	);
 	app.use(express.json());
