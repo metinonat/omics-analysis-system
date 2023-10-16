@@ -37,6 +37,6 @@ export const validateRequest = (schemas: { bodySchema?: Joi.ObjectSchema<any>; q
 
 export const validateTsvFile = (req: Request, res: Response, next: NextFunction) => {
 	if (!req.file) errorResponse("No file uploaded!", HttpStatus.BadRequest, req, res);
-	else if (req.file.mimetype !== "text/tab-separated-values") errorResponse("Samples file must be a TSV file!", HttpStatus.BadRequest, req, res);
+	//else if (req.file.mimetype !== "text/tab-separated-values") errorResponse("Samples file must be a TSV file!", HttpStatus.BadRequest, req, res);
 	else next();
 };
