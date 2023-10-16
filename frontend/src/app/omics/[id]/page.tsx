@@ -46,17 +46,17 @@ export default function OmicsDetail() {
   });
 
   React.useEffect(() => {
-    fetch(`${process.env}/omics?geneId=${params.id}`)
+    fetch(`${process.env.API_URL}/omics?geneId=${params.id}`)
       .then(async (response) => {
         setData(await response.json());
       })
       .catch((error) => console.error(error));
-    fetch(`${process.env}/analysis/gene/${params.id}`)
-      .then(async (response) => {
-        setAnalysis(await response.json());
-      })
-      .catch((error) => console.error(error));
-  });
+    fetch(`${process.env.API_URL}/analysis/gene/${params.id}`)
+			.then(async (response) => {
+				setAnalysis(await response.json());
+			})
+			.catch((error) => console.error(error));
+  }, []);
   return (
     <>
       <Toolbar />
