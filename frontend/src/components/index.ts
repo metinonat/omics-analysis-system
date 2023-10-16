@@ -11,8 +11,8 @@ import TablePaginationActions from "./common/TablePaginationActions";
 import AllAnomaliesTable from "./analysis/AllAnomalies";
 import Title from "./common/Title";
 import SearchBar from "./common/SearchBar";
-import AddOmicsButton from "./_omics/AddOmicsButton";
-import AddSampleButton from "./_samples/AddSampleButton";
+import AddOmicsButton from "./omics/AddOmicsButton";
+import AddSampleButton from "./samples/AddSampleButton";
 import ExpressionChart from "./analysis/ExpressionChart";
 
 export {
